@@ -9,4 +9,6 @@ public interface UserService {
     User validate(String name, String passwd);
 
     String genJWT(User user);
+
+    int addUser(User user);
 }

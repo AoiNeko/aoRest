@@ -1,10 +1,12 @@
 package com.aoineko.service.impl;
 
+import com.aoineko.dao.UserDAO;
 import com.aoineko.entity.User;
 import com.aoineko.service.UserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import sun.misc.BASE64Decoder;
@@ -35,10 +37,17 @@ public class UserServiceImpl implements UserService {
     @Value("${aoi.jwt.issuer}")
     private String issuer;
 
+    @Autowired
+    private UserDAO userDAO;
     @Override
     public User validate(String name, String passwd) {
         User user = getUserByNameAndPasswd(name, passwd);
         return user;
+    }
+
+    @Override
+    public int addUser(User user) {
+        return userDAO.addUser(user);
     }
 
     @Override
@@ -56,7 +65,7 @@ public class UserServiceImpl implements UserService {
             Algorithm algorithmRS = Algorithm.RSA256(rsaPublicKey, rsaPrivateKey);
             Date now = new Date();
             token = JWT.create()
-                    .withIssuer(issuer).withClaim("userName", user.getUserName()).withIssuedAt(now).
+                    .withIssuer(issuer).withClaim("userName", user.getName()).withIssuedAt(now).
                             withExpiresAt(DateUtils.addDays(now, 5))
                     .sign(algorithmRS);
         } catch (NoSuchAlgorithmException e) {
@@ -68,9 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User getUserByNameAndPasswd(String name, String passwd) {
-        User user = new User();
-        user.setUserName(name);
-        return  user;
+        return  userDAO.getUserByNameAndPasswd(name, passwd);
     }
 
     private String getJwt() throws UnsupportedEncodingException {

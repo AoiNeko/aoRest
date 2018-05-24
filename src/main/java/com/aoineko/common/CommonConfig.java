@@ -2,9 +2,14 @@ package com.aoineko.common;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.mysql.jdbc.Driver;
+import org.apache.ibatis.plugin.Interceptor;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import tk.mybatis.spring.mapper.MapperScannerConfigurer;
 
 import javax.sql.DataSource;
@@ -14,7 +19,6 @@ import java.util.Properties;
  * Created by com.aoineko on 2017/7/16.
  */
 @Configuration
-
 public class CommonConfig {
 
     @Value("${mysql.url}")
@@ -23,8 +27,8 @@ public class CommonConfig {
     private String username;
     @Value("${mysql.password}")
     private String password;
-    @Value("${mysql.driver-class-name}")
-    private String driverClassName;
+//    @Value("${mysql.driver-class-name}")
+//    private String driverClassName;
     @Value("${mysql.maxActive}")
     private Integer maxActive;
     @Value("${mysql.initialSize}")
@@ -51,7 +55,7 @@ public class CommonConfig {
     public DataSource dataSource() {
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setDriverClassName(driverClassName);
+//        dataSource.setDriverClassName(driverClassName);
         dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
@@ -68,15 +72,20 @@ public class CommonConfig {
         return dataSource;
     }
 
-    @Bean
-    public MapperScannerConfigurer mybatisConfig() {
-        MapperScannerConfigurer configurer = new MapperScannerConfigurer();
-        configurer.setBasePackage("com.aoineko.dao.mapper");
-        Properties properties = new Properties();
-        properties.setProperty("mappers", "tk.mybatis.mapper.common.Mapper");
-        configurer.setProperties(properties);
-        configurer.setSqlSessionFactoryBeanName("sqlSessionFactoryBeanName");
-        return configurer;
+
+    @Bean(name = "sqlSessionFactoryBeanName")
+    public SqlSessionFactoryBean sqlSessionFactoryBean(@Qualifier("dataSource") DataSource ds) throws Exception {
+        final SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+        sqlSessionFactoryBean.setDataSource(ds);
+        return sqlSessionFactoryBean;
     }
+
+
+
+    @Bean(name = "transactionManager")
+    public DataSourceTransactionManager dataSourceTransactionManager(@Qualifier("dataSource") DataSource ds) {
+        return new DataSourceTransactionManager(ds);
+    }
+
 
 }

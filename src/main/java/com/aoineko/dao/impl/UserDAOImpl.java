@@ -14,7 +14,7 @@ public class UserDAOImpl implements UserDAO{
 
     @Override
     public int addUser(User user) {
-        return userMapper.insert(user);
+        return userMapper.insertSelective(user);
     }
 
     @Override

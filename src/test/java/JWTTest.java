@@ -15,6 +15,9 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Date;
 
 public class JWTTest {
@@ -71,5 +74,14 @@ public class JWTTest {
             //Invalid signature/claims
             System.out.println("1ihyaoishdoiahd");
         }
+    }
+
+
+    @Test
+    public void timezoneTest() {
+
+        Instant now = Instant.now();
+        System.out.println(Timestamp.valueOf(now.atZone(ZoneId.of("GMT")).toLocalDateTime()));
+
     }
 }

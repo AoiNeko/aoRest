@@ -80,8 +80,19 @@ public class JWTTest {
     @Test
     public void timezoneTest() {
 
+        long dayMillis =  1000 * 60 *60 * 24;
+
         Instant now = Instant.now();
         System.out.println(Timestamp.valueOf(now.atZone(ZoneId.of("GMT")).toLocalDateTime()));
 
+        Long timeStamp = 1528133742131l;
+
+        Long dayStart = timeStamp / dayMillis * dayMillis;
+
+        Long dayEnd = dayStart + dayMillis -1 ;
+        System.out.println(dayStart);
+        System.out.println(dayEnd);
+        System.out.println(new Date(dayStart).toInstant().atZone(ZoneId.of("GMT")).toString());
+        System.out.println(new Date(dayEnd));dayStart
     }
 }

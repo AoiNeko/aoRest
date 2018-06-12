@@ -1,6 +1,6 @@
 package com.aoineko.controller;
 
-import com.aoineko.entity.Post;
+import com.aoineko.dto.PostDTO;
 import com.aoineko.entity.Response;
 import com.aoineko.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Created by aoineko on 2018/5/23.
@@ -28,10 +27,16 @@ public class BlogController {
 
     @RequestMapping("/get")
     public Response getPost(@RequestParam("id") String id) {
-        Post post = postService.getPost(Long.valueOf(id));
-        return  new Response(post);
+        PostDTO postDTO = postService.getPostContent(Long.valueOf(id));
+        return  new Response(postDTO);
     }
 
+    @RequestMapping("/day/list")
+    public Response dayList(@RequestParam("t") Long dayTimestamp) {
+        List<PostDTO> postDTOS = postService.getDayList(dayTimestamp);
+        return new Response(postDTOS);
+
+    }
 
 
     public Response savePost() {

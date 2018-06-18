@@ -12,5 +12,5 @@ public interface PostService {
 
     PostDTO getPostContent(Long aLong);
 
-    List<PostDTO> getDayList(Long dayTimestamp);
+    List<PostDTO> getDayList(Long dayTimestamp, String timeZone);
 }

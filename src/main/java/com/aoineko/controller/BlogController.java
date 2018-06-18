@@ -1,5 +1,6 @@
 package com.aoineko.controller;
 
+import com.aoineko.common.util.DateUtils;
 import com.aoineko.dto.PostDTO;
 import com.aoineko.entity.Response;
 import com.aoineko.service.PostService;
@@ -32,10 +33,9 @@ public class BlogController {
     }
 
     @RequestMapping("/day/list")
-    public Response dayList(@RequestParam("t") Long dayTimestamp) {
-        List<PostDTO> postDTOS = postService.getDayList(dayTimestamp);
+    public Response dayList(@RequestParam("t") Long dayTimestamp, @RequestParam("tz") Integer timeZone) {
+        List<PostDTO> postDTOS = postService.getDayList(dayTimestamp, DateUtils.getTimezoneForConvert(timeZone));
         return new Response(postDTOS);
-
     }
 
 

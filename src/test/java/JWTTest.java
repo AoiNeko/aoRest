@@ -3,6 +3,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import sun.misc.BASE64Decoder;
@@ -93,6 +94,11 @@ public class JWTTest {
         System.out.println(dayStart);
         System.out.println(dayEnd);
         System.out.println(new Date(dayStart).toInstant().atZone(ZoneId.of("GMT")).toString());
-        System.out.println(new Date(dayEnd));dayStart
+        System.out.println(new Date(dayEnd));
+    }
+
+    @Test
+    public void testDateUtils() {
+        System.out.println(DateFormatUtils.format(new Date(), "yyyy-MM-dd"));
     }
 }

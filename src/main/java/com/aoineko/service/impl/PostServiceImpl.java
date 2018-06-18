@@ -15,6 +15,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by com.aoineko on 2018/5/16.
@@ -41,15 +42,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDTO> getDayList(Long dayTimestamp) {
-
-//        dayTimestamp / 1000 / 60 / 60 / 24
-        java.util.Date date = java.util.Date.from(Instant.ofEpochMilli(dayTimestamp).atZone(ZoneId.of("GMT")).toInstant());
-        
-
-
-
-
-        return null;
+    public List<PostDTO> getDayList(Long dayTimestamp, String timeZone) {
+        java.util.Date date = java.util.Date.from(Instant.ofEpochMilli(dayTimestamp));
+        List<Post> posts = postDAO.getPostByDate(date, timeZone);
+        return posts.stream().map(post -> new PostDTO(post)).
+                collect(Collectors.toList());
     }
 }

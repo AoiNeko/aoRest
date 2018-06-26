@@ -2,6 +2,8 @@ package com.aoineko.dto;
 
 import com.aoineko.entity.Post;
 import com.aoineko.entity.PostContent;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -12,6 +14,7 @@ public class PostDTO {
 
     private String title;
 
+    @JsonProperty(value = "abstract")
     private String abstractText;
 
     private String tag;

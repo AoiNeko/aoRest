@@ -1,5 +1,6 @@
 package com.aoineko.service.impl;
 
+import com.aoineko.common.util.DateUtils;
 import com.aoineko.dao.PostContentDAO;
 import com.aoineko.dao.PostDAO;
 import com.aoineko.dto.PostDTO;
@@ -8,13 +9,12 @@ import com.aoineko.entity.PostContent;
 import com.aoineko.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.util.calendar.ZoneInfo;
 
-import java.sql.Date;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 /**
@@ -42,9 +42,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDTO> getDayList(Long dayTimestamp, String timeZone) {
-        java.util.Date date = java.util.Date.from(Instant.ofEpochMilli(dayTimestamp));
-        List<Post> posts = postDAO.getPostByDate(date, timeZone);
+    public List<PostDTO> getDayList(Long dayTimestamp, Integer timeZone) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone(DateUtils.getTimezone(timeZone)));
+        calendar.setTimeInMillis(dayTimestamp);
+        Date date =  calendar.getTime();
+        List<Post> posts = postDAO.getPostByDate(date, DateUtils.getTimezoneForConvert(timeZone) );
         return posts.stream().map(post -> new PostDTO(post)).
                 collect(Collectors.toList());
     }

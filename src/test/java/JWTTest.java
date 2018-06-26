@@ -8,6 +8,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import sun.misc.BASE64Decoder;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -100,5 +101,33 @@ public class JWTTest {
     @Test
     public void testDateUtils() {
         System.out.println(DateFormatUtils.format(new Date(), "yyyy-MM-dd"));
+    }
+
+
+    @Test
+    public void testTry() throws Exception {
+
+        try(CloseOne x = getInt()) {
+
+        }
+        System.out.println("chenggong");
+    }
+
+    class CloseOne implements Closeable {
+        CloseOne() {
+
+        }
+        @Override
+        public void close() throws IOException {
+
+        }
+    }
+
+    private CloseOne getInt () throws Exception {
+
+
+            throw  new Exception("222");
+
+//        return new CloseOne();
     }
 }

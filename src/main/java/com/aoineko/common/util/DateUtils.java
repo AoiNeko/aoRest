@@ -12,11 +12,11 @@ public class DateUtils {
         }
 
         if (timeZone > 0) {
-            return stringBuilder.append("+").append(timeZone).append(":00").toString();
+            return stringBuilder.append("+:").append(timeZone > 9 ? timeZone : "0" + timeZone).append(":00").toString();
         }
 
         if (timeZone < 0) {
-            return stringBuilder.append(timeZone).append(":00").toString();
+            return stringBuilder.append("-:").append(timeZone < -9 ? -1 * timeZone :  "0" + (-1 * timeZone)).append(":00").toString();
         }
         throw new RuntimeException("timeZone error");
     }

@@ -32,12 +32,17 @@ public class BlogController {
         return  new Response(postDTO);
     }
 
+    /**
+     * 取某日的时间戳对应的内容
+     * @param dayTimestamp 时间戳
+     * @param timeZone 时区(signed int) [-12~12]
+     * @return
+     */
     @RequestMapping("/day/list")
     public Response dayList(@RequestParam("t") Long dayTimestamp, @RequestParam("tz") Integer timeZone) {
-        List<PostDTO> postDTOS = postService.getDayList(dayTimestamp, DateUtils.getTimezoneForConvert(timeZone));
+        List<PostDTO> postDTOS = postService.getDayList(dayTimestamp,timeZone);
         return new Response(postDTOS);
     }
-
 
     public Response savePost() {
 

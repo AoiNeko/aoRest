@@ -12,4 +12,6 @@ public interface PostDAO {
     Post getPostById(Long id);
 
     List<Post> getPostByDate(Date date, String timeZone);
+
+    List<Post> getPostByMonth(Date date, String timeZone);
 }

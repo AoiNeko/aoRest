@@ -35,4 +35,13 @@ public class PostDAOImpl implements PostDAO {
         return postMapper.selectByExample(example);
 
     }
+
+    @Override
+    public List<Post> getPostByMonth(Date date, String timeZone) {
+        Example example = new Example(Post.class);
+
+        example.createCriteria().andCondition("DATE_FORMAT(CONVERT_TZ(gmt_create,'+00:00', '" + timeZone + "' ) , '%Y-%m') = '" + DateFormatUtils.format(date, "yyyy-MM")  + "'");
+
+        return postMapper.selectByExample(example);
+    }
 }

@@ -44,6 +44,18 @@ public class BlogController {
         return new Response(postDTOS);
     }
 
+    /**
+     * 取某月的时间戳对应的内容
+     * @param dayTimestamp 时间戳
+     * @param timeZone 时区(signed int) [-12~12]
+     * @return
+     */
+    @RequestMapping("/month/list")
+    public Response monthList(@RequestParam("t") Long dayTimestamp, @RequestParam("tz") Integer timeZone) {
+        List<PostDTO> postDTOS = postService.getMonthList(dayTimestamp,timeZone);
+        return new Response(postDTOS);
+    }
+
     public Response savePost() {
 
         return null;

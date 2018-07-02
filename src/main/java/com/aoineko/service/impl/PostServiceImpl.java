@@ -51,4 +51,15 @@ public class PostServiceImpl implements PostService {
         return posts.stream().map(post -> new PostDTO(post)).
                 collect(Collectors.toList());
     }
+
+    @Override
+    public List<PostDTO> getMonthList(Long dayTimestamp, Integer timeZone) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone(DateUtils.getTimezone(timeZone)));
+        calendar.setTimeInMillis(dayTimestamp);
+        Date date =  calendar.getTime();
+        List<Post> posts = postDAO.getPostByMonth(date, DateUtils.getTimezoneForConvert(timeZone) );
+        return posts.stream().map(post -> new PostDTO(post)).
+                collect(Collectors.toList());
+    }
 }

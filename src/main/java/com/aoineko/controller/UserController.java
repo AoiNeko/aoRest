@@ -28,7 +28,7 @@ public class UserController {
         if (user != null) {
             String jwt = userService.genJWT(user);
             response.addHeader("t", jwt);
-            return new Response(user);
+            return new Response(jwt);
         }
         return new Response(400, "validate error");
     }

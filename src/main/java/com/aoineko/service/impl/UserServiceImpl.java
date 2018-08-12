@@ -1,10 +1,15 @@
 package com.aoineko.service.impl;
 
+import com.aoineko.dao.LoginTokenDAO;
 import com.aoineko.dao.UserDAO;
 import com.aoineko.entity.User;
 import com.aoineko.service.UserService;
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.LoadingCache;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +26,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by com.aoineko on 2018/5/15.
@@ -30,15 +36,19 @@ public class UserServiceImpl implements UserService {
 
     @Value("${aoi.jwt.pkey}")
     private String jwtPublicKey;
-
     @Value("${aoi.jwt.privateKey}")
     private String jwtPrivateKey;
-
     @Value("${aoi.jwt.issuer}")
     private String issuer;
-
+    @Autowired
+    private RSAPublicKey rsaPublicKey;
+    @Autowired
+    private RSAPrivateKey rsaPrivateKey;
     @Autowired
     private UserDAO userDAO;
+    @Autowired
+    private LoginTokenDAO loginTokenDAO;
+
     @Override
     public User validate(String name, String passwd) {
         User user = getUserByNameAndPasswd(name, passwd);
@@ -48,6 +58,47 @@ public class UserServiceImpl implements UserService {
     @Override
     public int addUser(User user) {
         return userDAO.addUser(user);
+    }
+
+    @Override
+    public boolean authVerify(String jwtString) {
+        try {
+            DecodedJWT jwt = jwtVerify(jwtString);
+            Date now = new Date();
+            if (jwt.getIssuer().equals(issuer) && jwt.getExpiresAt().after(now)) {
+                Long userId = getTokenUserId(jwtString);
+                if (userId == null) {
+                    return false;
+                }
+                return true;
+            }
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+        }
+        return false;
+    }
+
+
+    private DecodedJWT jwtVerify(String jwtString) throws NoSuchAlgorithmException, InvalidKeySpecException {
+
+        Algorithm algorithmRS = Algorithm.RSA256(rsaPublicKey, rsaPrivateKey);
+
+
+        JWTVerifier verifier = JWT.require(algorithmRS)
+                .withIssuer(issuer)
+                .build(); //Reusable verifier instance
+        DecodedJWT jwt = verifier.verify(jwtString);
+        return jwt;
+    }
+
+    @Override
+    public Long getTokenUserId(String key) {
+        //TODO add loadingCache
+        return loginTokenDAO.getUserIdByToken(key);
+    }
+
+    @Override
+    public User getUserById(Long userId) {
+        return null;
     }
 
     @Override
@@ -77,7 +128,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User getUserByNameAndPasswd(String name, String passwd) {
-        return  userDAO.getUserByNameAndPasswd(name, passwd);
+        return userDAO.getUserByNameAndPasswd(name, passwd);
     }
 
     private String getJwt() throws UnsupportedEncodingException {

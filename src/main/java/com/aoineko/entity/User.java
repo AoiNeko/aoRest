@@ -27,15 +27,15 @@ public class User {
         return other instanceof User;
     }
 
-    @Column(name="mobile")
+    @Column(name = "mobile")
     private String mobile;
-    @Column(name="email")
+    @Column(name = "email")
     private String email;
-    @Column(name="age")
+    @Column(name = "age")
     private Integer age;
-    @Column(name="sex")
+    @Column(name = "sex")
     private Boolean sex;
-    @Column(name="gmt_create")
+    @Column(name = "gmt_create")
     private Date gmtCreate;
     @Column(name = "gmt_update")
     private Date gmtUpdate;

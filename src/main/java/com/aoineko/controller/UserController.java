@@ -1,5 +1,6 @@
 package com.aoineko.controller;
 
+import com.aoineko.annotation.Login;
 import com.aoineko.entity.Response;
 
 
@@ -23,6 +24,7 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping("login")
+    @Login
     public Response login(HttpServletRequest request, HttpServletResponse response, @RequestParam("userName") String name, @RequestParam("passwd") String passwd) {
         User user = userService.validate(name, passwd);
         if (user != null) {

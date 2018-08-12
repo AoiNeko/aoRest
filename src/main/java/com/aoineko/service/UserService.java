@@ -11,4 +11,10 @@ public interface UserService {
     String genJWT(User user);
 
     int addUser(User user);
+
+    boolean authVerify(String jwtString);
+
+    Long getTokenUserId(String key);
+
+    User getUserById(Long userId);
 }

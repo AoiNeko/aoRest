@@ -22,7 +22,7 @@ public class Post {
     private String abstractText;
     @Column(name = "tag")
     private String tag;
-    @Column(name="gmt_create")
+    @Column(name = "gmt_create")
     private Date gmtCreate;
     @Column(name = "gmt_update")
     private Date gmtUpdate;

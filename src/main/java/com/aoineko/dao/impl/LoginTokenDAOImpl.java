@@ -26,4 +26,9 @@ public class LoginTokenDAOImpl implements LoginTokenDAO {
         List<LoginToken> lists = loginTokenMapper.selectByExample(example);
         return lists != null && lists.size() > 0 ? lists.get(0).getUserId() : null;
     }
+
+    @Override
+    public void saveLoginToken(LoginToken loginToken) {
+        loginTokenMapper.insertSelective(loginToken);
+    }
 }

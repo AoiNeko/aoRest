@@ -1,7 +1,10 @@
 package com.aoineko.service.impl;
 
+import com.aoineko.aop.LoginAop;
+import com.aoineko.controller.UserController;
 import com.aoineko.dao.LoginTokenDAO;
 import com.aoineko.dao.UserDAO;
+import com.aoineko.entity.LoginToken;
 import com.aoineko.entity.User;
 import com.aoineko.service.UserService;
 import com.auth0.jwt.JWT;
@@ -9,6 +12,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,6 +54,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private LoginTokenDAO loginTokenDAO;
 
+    LoadingCache<String, User> userLoadingCache = CacheBuilder.newBuilder().maximumSize(100).expireAfterAccess(15, TimeUnit.DAYS).build(new CacheLoader<String, User>() {
+        @Override
+        public User load(String key) throws Exception {
+            Long userId = loginTokenDAO.getUserIdByToken(key);
+            LoginAop.logger.info("loading cache load user Id {}", userId);
+            return userDAO.getById(userId);
+        }
+    });
     @Override
     public User validate(String name, String passwd) {
         User user = getUserByNameAndPasswd(name, passwd);
@@ -73,6 +86,8 @@ public class UserServiceImpl implements UserService {
                 return true;
             }
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+        } catch (ExecutionException e) {
+            LoginAop.logger.error("get cahce user fail");
         }
         return false;
     }
@@ -91,14 +106,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long getTokenUserId(String key) {
-        //TODO add loadingCache
-        return loginTokenDAO.getUserIdByToken(key);
+    public Long getTokenUserId(String key) throws ExecutionException {
+        return userLoadingCache.get(key).getId();
     }
 
+
     @Override
-    public User getUserById(Long userId) {
-        return null;
+    public void addUserLoginToken(String jwt, User user) {
+        LoginToken loginToken =  new LoginToken();
+        loginToken.setUserId(user.getId());
+        loginToken.setToken(jwt);
+        loginToken.setDeleted(false);
+        loginTokenDAO.saveLoginToken(loginToken);
     }
 
     @Override

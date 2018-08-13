@@ -20,7 +20,7 @@ public class LoginToken {
     @Column(name = "token")
     private String token;
     @Column(name = "deleted")
-    private String deleted;
+    private Boolean deleted;
     @Column(name = "gmt_create")
     private Date gmtCreate;
     @Column(name = "gmt_update")

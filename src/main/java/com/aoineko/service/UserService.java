@@ -2,6 +2,8 @@ package com.aoineko.service;
 
 import com.aoineko.entity.User;
 
+import java.util.concurrent.ExecutionException;
+
 /**
  * Created by com.aoineko on 2018/5/15.
  */
@@ -14,7 +16,7 @@ public interface UserService {
 
     boolean authVerify(String jwtString);
 
-    Long getTokenUserId(String key);
+    Long getTokenUserId(String key) throws ExecutionException;
 
-    User getUserById(Long userId);
+    void addUserLoginToken(String jwt, User user);
 }

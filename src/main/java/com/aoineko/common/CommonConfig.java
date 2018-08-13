@@ -108,22 +108,6 @@ public class CommonConfig {
         return new DataSourceTransactionManager(ds);
     }
 
-    @Bean(name = "userLoadingCache")
-    @DependsOn({"userService"})
-    public LoadingCache<String, User> loginUserJwtCache(@Autowired UserService userService) {
-
-        return CacheBuilder.newBuilder().maximumSize(100).expireAfterAccess(15, TimeUnit.DAYS).build(new CacheLoader<String, User>() {
-
-            @Override
-            public User load(String key) throws Exception {
-                Long userId = userService.getTokenUserId(key);
-                if (userId == null) {
-                    return null;
-                }
-                return userService.getUserById(userId);
-            }
-        });
-    }
 
     @Bean
     public RSAPublicKey rsaPublicKey() throws InvalidKeySpecException, NoSuchAlgorithmException, IOException {

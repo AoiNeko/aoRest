@@ -29,7 +29,7 @@ public class BlogControllerTests {
             @Override
             public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
                 HttpHeaders httpHeaders =request.getHeaders();
-                httpHeaders.set("Authorization", "Bearer aslkdjs98");
+                httpHeaders.set("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJhb2luZWtvIiwidXNlck5hbWUiOiJ0ZXN0IiwiZXhwIjoxNTM0NjA5MjQ0LCJpYXQiOjE1MzQxNzcyNDR9.aux4u3Z6U7Z1OqDP0yi2tSi9kbmHC9tpgdzXASmXGqSUS4s1oPIH4Vj6lphUDXFV944N174i9_byptKeAlY_YHLJJdZRLWPGPX9zswz41WdI4696L0-H3aPw5eJKdqEDTDV4VK2WQLlzhu8LLPbDjKeeAcD_R6SC0waaHUDltjERCNuQvqqR4N4EZJv3skj2lNPBCJOGe5UKH6iGWOFcjyfkzLYYF0bXlD3TElPSog8Qy6H2ei2pV6CT2QkQNgnBKlrgRIs0iFq9MHKuB--TPrtaBfkw3YTkH683jW3EuUX0X4TWyqLiISD4wisd5FgeSljfRXhWKvgVQO8apLYZug");
 
                 return execution.execute(request, body);
             }

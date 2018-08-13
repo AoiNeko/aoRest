@@ -23,4 +23,9 @@ public class UserDAOImpl implements UserDAO{
         example.createCriteria().andEqualTo("name", name).andEqualTo("password", passwd);
         return userMapper.selectOneByExample(example);
     }
+
+    @Override
+    public User getById(Long userId) {
+        return userMapper.selectByPrimaryKey(userId);
+    }
 }

@@ -6,4 +6,6 @@ public interface UserDAO {
     int addUser(User user);
 
     User getUserByNameAndPasswd(String name, String passwd);
+
+    User getById(Long userId);
 }

@@ -29,6 +29,7 @@ public class UserController {
         User user = userService.validate(name, passwd);
         if (user != null) {
             String jwt = userService.genJWT(user);
+            userService.addUserLoginToken(jwt, user);
             response.addHeader("t", jwt);
             return new Response(jwt);
         }

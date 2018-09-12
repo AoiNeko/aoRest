@@ -40,7 +40,7 @@ public class LoginAop {
     @Autowired
     UserService userService;
 
-    @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping) && execution(* com.aoineko.controller.*.*(..))")
     public void requestPointCut() {
 
     }
@@ -55,7 +55,7 @@ public class LoginAop {
             MethodSignature methodSignature = (MethodSignature)signature;
 
            Login login =  methodSignature.getMethod().getAnnotation(Login.class);
-            if (login == null || !login.value()) {
+            if (login == null || login.value()) {
                 authHeaderValid();
             }
             result = joinPoint.proceed();

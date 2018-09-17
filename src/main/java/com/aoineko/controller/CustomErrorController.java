@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Created by aoineko on 2018/9/12.
  */
 
-@Controller
+//@Controller
 public class CustomErrorController implements ErrorController {
 
     @RequestMapping(value="error")
-    @Login(false)
+//    @Login(false)
     public String handleError(){
         return "errorHtml.html";
     }

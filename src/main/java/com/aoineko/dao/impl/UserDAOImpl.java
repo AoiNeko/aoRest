@@ -25,6 +25,13 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
+    public User getUserByName(String userName) {
+        Example example = new Example(User.class);
+        example.createCriteria().andEqualTo("name", userName);
+        return userMapper.selectOneByExample(example);
+    }
+
+    @Override
     public User getById(Long userId) {
         return userMapper.selectByPrimaryKey(userId);
     }

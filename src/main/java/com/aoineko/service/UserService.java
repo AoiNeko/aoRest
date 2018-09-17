@@ -1,7 +1,9 @@
 package com.aoineko.service;
 
+import com.aoineko.entity.SysResource;
 import com.aoineko.entity.User;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -19,4 +21,7 @@ public interface UserService {
     Long getTokenUserId(String key) throws ExecutionException;
 
     void addUserLoginToken(String jwt, User user);
+
+    List<SysResource> getMenuByName(String userName);
+
 }

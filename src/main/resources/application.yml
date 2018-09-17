@@ -19,3 +19,10 @@ mysql:
  timeBetweenEvictionRunsMillis: 30000
  minEvictableIdleTimeMillis: 1800000
  validationQuery: select 1
+spring:
+ thymeleaf:
+  cache: false
+  prefix: classpath:/templates/
+  suffix: .html
+  mode: LEGACYHTML5
+  encoding: UTF-8

@@ -31,9 +31,9 @@ import java.lang.reflect.Method;
 /**
  * Created by aoineko on 2018/7/16.
  */
-
-@Aspect
-@Component
+//
+//@Aspect
+//@Component
 public class LoginAop {
     public static final Logger logger = LoggerFactory.getLogger(LoginAop.class);
 
